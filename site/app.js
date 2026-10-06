@@ -202,6 +202,10 @@ function render() {
   }
   $("verdict").textContent = verdict;
   $("reason").innerHTML = reason;
+  state.goNow = dark && (cloud == null || cloud < 70) && P.eyes >= 0.4;
+  state.goText = `${pct(P.eyes)} chance to see it by eye in ${name} over the next hour.`;
+  maybePing();
+  $("ping").hidden = REPLAY != null;
   state.intensity = dark ? Math.min(1, P.camera * 0.6 + P.eyes) : Math.min(0.35, P.eyes);
 
   $("facts").hidden = false;
@@ -428,6 +432,47 @@ function startSky() {
   requestAnimationFrame(frame);
 }
 
+
+// ---------- "tell me when to go out" ----------
+// While the page is open it re-checks every five minutes; when it is dark, mostly clear and the odds for your eyes
+// pass 40%, it sends one notification (and a soft chime) at most once an hour.
+function chime() {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    [660, 880].forEach((f, i) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.frequency.value = f; o.type = "sine";
+      g.gain.setValueAtTime(0.0001, ac.currentTime + i * 0.25);
+      g.gain.exponentialRampToValueAtTime(0.18, ac.currentTime + i * 0.25 + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + i * 0.25 + 0.9);
+      o.connect(g).connect(ac.destination);
+      o.start(ac.currentTime + i * 0.25); o.stop(ac.currentTime + i * 0.25 + 1);
+    });
+  } catch { /* no audio */ }
+}
+function maybePing() {
+  if (!state.pingOn || !state.goNow) return;
+  const last = store.get("pinged") || 0;
+  if (Date.now() - last < 3600000) return;
+  store.set("pinged", Date.now());
+  chime();
+  try { new Notification("Go outside now", { body: state.goText, icon: "favicon.svg" }); } catch { /* blocked */ }
+}
+function setupPing() {
+  const btn = $("ping");
+  const show = (on) => { btn.setAttribute("aria-pressed", String(on)); btn.querySelector("span").textContent = on ? "I'll tell you when to go out" : "Tell me when to go out"; };
+  btn.addEventListener("click", async () => {
+    if (state.pingOn) { state.pingOn = false; store.set("ping", false); show(false); return; }
+    if ("Notification" in window && Notification.permission !== "granted") {
+      try { await Notification.requestPermission(); } catch { /* old browsers */ }
+    }
+    state.pingOn = true; store.set("ping", true); show(true);
+    $("status").textContent = "Keep this tab open: it checks every five minutes and chimes when it's worth going out.";
+    maybePing();
+  });
+  if (store.get("ping")) { state.pingOn = true; show(true); }
+}
+
 // ---------- place ----------
 function setPlace(place, save = true) {
   state.place = place;
@@ -487,6 +532,7 @@ addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setT
 async function boot() {
   try { AACGM = await (await fetch("aacgm.json")).json(); } catch { AACGM = null; }
   setupRed();
+  setupPing();
   setupPlace();
   startSky();
   tick();
