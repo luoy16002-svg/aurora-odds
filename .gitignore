@@ -1,6 +1,6 @@
 .venv/
 .venv-gpu/
-data/
+/data/
 __pycache__/
 *.log
 .tabpfn-cache/
