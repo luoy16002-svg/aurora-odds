@@ -1,0 +1,49 @@
+{
+ "mode": "stratified",
+ "weights": [
+  3.081173821845364,
+  1.5236615366064576,
+  1.0327256628089982,
+  0.48713072070102126,
+  0.20171961849845182,
+  0.07368645025536592,
+  0.036473459294713455,
+  0.02133730708283054
+ ],
+ "thresholds": [
+  4,
+  5,
+  6,
+  7,
+  8
+ ],
+ "features": [
+  "ahead_min",
+  "ahead_bz_min",
+  "ahead_bz_mean",
+  "ahead_newell_max",
+  "ahead_newell_mean",
+  "ahead_v_max",
+  "ahead_pdyn_max",
+  "now_bz_mean",
+  "now_bz_min",
+  "now_bt_mean",
+  "now_v_mean",
+  "now_n_mean",
+  "now_pdyn_mean",
+  "now_newell_mean",
+  "recent_bz_mean",
+  "recent_newell_mean",
+  "recent_v_mean",
+  "earlier_bz_mean",
+  "earlier_newell_mean",
+  "newell_3h",
+  "south_minutes_3h",
+  "doy_sin",
+  "doy_cos",
+  "ut_sin",
+  "ut_cos"
+ ],
+ "train_end": "2020-01-01",
+ "n_estimators": 8
+}

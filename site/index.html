@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora Odds · Should you go outside and look up?</title>
+<meta name="description" content="A live aurora nowcast for wherever you are: the chance the northern or southern lights reach your sky in the next hour, whether it is dark and clear enough, and which way to look. Powered by TabPFN, an open tabular foundation model.">
+<meta name="theme-color" content="#070b12">
+<meta property="og:title" content="Aurora Odds">
+<meta property="og:description" content="Should you go outside and look up? A live aurora nowcast for your exact sky, powered by an open model.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#verdict">Skip to the answer</a>
+<header class="top">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><b>Aurora Odds</b></div>
+  <button id="redmode" class="chip" type="button" aria-pressed="false" title="Red light keeps your eyes adapted to the dark">
+    <i class="ph ph-eye" aria-hidden="true"></i><span>Night vision</span>
+  </button>
+</header>
+
+<main>
+  <p class="replay" id="replay" hidden></p>
+  <section class="hero" aria-labelledby="verdict">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="hero-text">
+      <p class="eyebrow" id="where">Choose where you are</p>
+      <h1 id="verdict">Should you go outside and look up?</h1>
+      <p class="lede" id="reason">The next hour of aurora, for your exact sky: the odds, the dark, the clouds, and which way to face.</p>
+      <div class="locate">
+        <button id="geo" class="primary" type="button"><i class="ph ph-crosshair" aria-hidden="true"></i>Use my location</button>
+        <label class="pick"><span class="sr">Or pick a city</span>
+          <select id="city" aria-label="Or pick a city"><option value="">or pick a city</option></select>
+        </label>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+  </section>
+
+  <section class="facts" id="facts" hidden aria-label="Your sky right now">
+    <div class="fact" id="f-odds"><span class="k">Next hour</span><b class="v">–</b><span class="s">chance to see it</span></div>
+    <div class="fact" id="f-dark"><span class="k">Darkness</span><b class="v">–</b><span class="s"></span></div>
+    <div class="fact" id="f-cloud"><span class="k">Clouds</span><b class="v">–</b><span class="s"></span></div>
+    <div class="fact" id="f-need"><span class="k">Needed here</span><b class="v">–</b><span class="s"></span></div>
+  </section>
+
+  <section class="panel" id="look" hidden aria-labelledby="look-h">
+    <h2 id="look-h">Where to look</h2>
+    <p id="look-text" class="body"></p>
+    <svg id="horizon" viewBox="0 0 640 260" role="img" aria-label="Your poleward horizon with the expected height of the aurora"></svg>
+  </section>
+
+  <section class="panel" id="levels" hidden aria-labelledby="levels-h">
+    <h2 id="levels-h">The next hour at your latitude</h2>
+    <ul class="bars" id="bars"></ul>
+    <p class="fine">Probabilities from the model's full forecast distribution of Hp30, the half-hourly planetary geomagnetic index, for the hour starting now.</p>
+  </section>
+
+  <section class="panel" id="wind" aria-labelledby="wind-h">
+    <h2 id="wind-h">What the Sun is sending</h2>
+    <p id="wind-text" class="body">Loading the solar wind measured a million and a half kilometres upstream…</p>
+    <svg id="bzchart" viewBox="0 0 640 200" role="img" aria-label="Southward magnetic field of the solar wind over the last three hours and what is already on its way"></svg>
+    <div class="legend"><span><i class="sw south"></i>southward field (opens the door)</span><span><i class="sw ahead"></i>already measured, arriving soon</span></div>
+  </section>
+
+  <section class="panel" id="trend" aria-labelledby="trend-h">
+    <h2 id="trend-h">The last twelve hours</h2>
+    <svg id="spark" viewBox="0 0 640 140" role="img" aria-label="Forecast geomagnetic level over the last twelve hours"></svg>
+    <p class="fine" id="trend-note"></p>
+  </section>
+
+  <section class="panel how" aria-labelledby="how-h">
+    <h2 id="how-h">How this works</h2>
+    <div class="cols">
+      <p><b>Measured upstream.</b> Spacecraft at the L1 point, 1.5 million km sunward, sample the solar wind every minute. That wind reaches Earth 20 to 80 minutes later, so the next stretch of weather is already known.</p>
+      <p><b>Read by an open model.</b> TabPFN, an open-weights tabular foundation model, reads 2,000 labelled half-hours from 1998 to 2019 in context. It is never trained on them; it returns a full probability distribution for the coming hour's geomagnetic activity.</p>
+      <p><b>Mapped to your sky.</b> One distribution answers every latitude: your geomagnetic latitude sets the activity level you need, and the page adds darkness, cloud cover and the direction to face.</p>
+    </div>
+    <p class="fine">Tested on 2023 to 2026, years the model never saw. Replay a real storm night: <a href="?replay=may2024&amp;place=London">London, 10 May 2024</a> · <a href="?replay=oct2024&amp;place=Chicago">Chicago, 10 October 2024</a>. Code and results: <a id="repo" href="https://github.com/luoy16002-svg/aurora-odds">GitHub</a>.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Solar wind: NOAA SWPC real-time feed. History: NASA OMNI and GFZ Potsdam Hp30 (CC BY 4.0). Clouds: Open-Meteo. Built with TabPFN (Prior Labs). <span id="updated"></span></p>
+  <p>A nowcast, not a promise: the aurora is a chaotic, beautiful thing.</p>
+</footer>
+<script src="app.js" type="module"></script>
+</body>
+</html>

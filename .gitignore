@@ -1,0 +1,10 @@
+.venv/
+.venv-gpu/
+data/
+__pycache__/
+*.log
+.tabpfn-cache/
+site/data/nowcast.json
+out/test_predictions.parquet
+post/
+out/test_predictions*.parquet
