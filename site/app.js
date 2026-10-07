@@ -4,7 +4,7 @@ const $ = (id) => document.getElementById(id);
 const rad = Math.PI / 180;
 const POLE = { n: { lat: 80.8, lon: -72.6 }, s: { lat: -80.8, lon: 107.4 } }; // IGRF dipole poles, epoch 2025
 // The auroral oval's equatorward edge in corrected (AACGM) magnetic latitude: about 66.5 deg at Kp 0 and about
-// 2 deg lower per Kp step (Gussenhoven et al. 1983; the same rule NOAA's Kp maps use). Low on the poleward horizon
+// 2 deg lower per Kp step (a linear fit of the kind Gussenhoven et al. 1983 made to DMSP data). Low on the poleward horizon
 // it is seen from roughly 3.5 deg further away, and a phone's night mode picks it up about 5.5 deg away, values
 // checked against what observers report for Tromso, Edinburgh, Minneapolis, London and the May 2024 storm.
 const EDGE0 = 66.5, SLOPE = 2.04;
