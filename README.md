@@ -4,7 +4,7 @@
 aurora is bright enough for your eyes or your phone camera in the next hour, whether it is dark and clear enough,
 and which way to face and how high to look.
 
-Live page: https://luoy16002-svg.github.io/aurora-odds/ · storm replays: [London, 10 May 2024](https://luoy16002-svg.github.io/aurora-odds/?replay=may2024&place=London), [Chicago, 10-11 October 2024](https://luoy16002-svg.github.io/aurora-odds/?replay=oct2024&place=Chicago)
+Live page: https://luoy16002-svg.github.io/aurora-odds/ · storm replays: [London, 10 May 2024](https://luoy16002-svg.github.io/aurora-odds/?replay=may2024&place=London), [Chicago, 10-11 October 2024](https://luoy16002-svg.github.io/aurora-odds/?replay=oct2024&place=Chicago) · write-up: [on DEV](https://dev.to/kaichen_dev/aurora-odds-should-you-go-outside-and-look-up-right-now-jjf)
 
 ![Aurora Odds replaying 10 May 2024 in London](docs/demo.gif)
 
